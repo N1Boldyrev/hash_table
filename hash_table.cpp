@@ -2,8 +2,8 @@
 #include <string>
 #include <vector>
 
-#define REHASH_INDEX 0.5
-#define DEFAULT_TABLE_SIZE 4
+#define REHASH_INDEX 0.5//коэффициент заполненияя таблицы 
+#define DEFAULT_TABLE_SIZE 4//первоначальный размер таблицы
 using namespace std;
 
 int hash_function(int key, int buffer_size)//мультипликативная хеш-функция 
@@ -16,21 +16,20 @@ template <class T>
 class Hash_table
 {
 protected:
-	int key;
-	int buffer_size = DEFAULT_TABLE_SIZE;
-	int size;
+	int buffer_size = DEFAULT_TABLE_SIZE;//размер таблицы
+	int size;//реальное кол-во элементов в таблице
 	vector<T>buffer;
 public:
 	Hash_table()
 	{
-		buffer.resize(buffer_size);
+		buffer.resize(buffer_size);//задание первоначального размера таблицы
 	}
 	~Hash_table()
 	{
-		buffer.clear();
+		buffer.clear();//очистка памяти
 	}
 
-	bool isEmpty(int key)
+	bool isEmpty(int key)//проверка на пустоту ячейки 
 	{
 		if (buffer[key] == "")
 		{
@@ -42,49 +41,45 @@ public:
 		}
 	}
 	
-	void rehash()
+	void rehash()//расширение таблицы
 	{
 		buffer_size *= 2;
 		buffer.resize(buffer_size);
 	}
 
 
-	bool add_element(T value,int key)
+	bool add_element(T value,int key)//вставка элемента в таблицу
 	{
-		if ((double)size/(double)buffer_size>=REHASH_INDEX)
+		if ((double)size/(double)buffer_size>=REHASH_INDEX)//если заполненность таблицы составляет 1/2 от размера таблицы
 		{
-			rehash();
+			rehash();//то расширить таблицу 
 		}
 
-		if (key>buffer_size)
-		{
-			return false;
-		}
 		int hash;
-		hash = hash_function(key, buffer_size);
-		if (!isEmpty(hash))
+		hash = hash_function(key, buffer_size);//вычисление хеш-значения для элемента 
+		if (!isEmpty(hash))//если элемент не пуст
 		{
-			while (!isEmpty(hash))
+			while (!isEmpty(hash))//переходим к следующему элементу,пока не будет найдена пустая ячейка
 			{
 				hash++;
-				if (hash==buffer_size)
-					return false;
+				if (hash==buffer_size)//если в конце таблицы не осталось свободных ячеек
+					return false;//возвращаем NO
 			}
 		}
-		buffer[hash] = value;
-		size++;
-		return true;
+		buffer[hash] = value;//если все условия удовлетворены-заносим запись в таблицу 
+		size++;//увеличиваем количество элементов
+		return true;//возвращаем ОК
 	}
-	bool find_element(T value) const
+	bool find_element(T value) const//поиск элемента в таблице
 	{
-		for (int i = 0; i < buffer_size; i++)
+		for (int i = 0; i < buffer_size; i++)//сравниваем значения в таблице с искомым 
 		{
-			if (buffer[i] == value)
+			if (buffer[i] == value)//если находим
 			{
-				return true;
+				return true;//возвращаем OK
 			}
 		}
-		return false;
+		return false;//если элемент отсутствует в таблице-возвращаем NO
 	}
 };
 
@@ -119,5 +114,5 @@ int main()
 			cout << "NO \n" << endl;
 		}
 	}
-    return 0;
+	return 0;
 }
