@@ -4,12 +4,12 @@
 
 #define REHASH_INDEX 0.5//коэффициент заполненияя таблицы 
 #define DEFAULT_TABLE_SIZE 4//первоначальный размер таблицы
+#define GOLDEN_RATIO 0.618033//золотое сечение
 using namespace std;
 
 int hash_function(int key, int buffer_size)//мультипликативная хеш-функция 
-{
-	double A = 0.618033;//основанно на методах золтого сечения 
-	return buffer_size * fmod(key*A, 1);
+{ 
+	return buffer_size * fmod(key*GOLDEN_RATIO, 1);
 }
 
 template <class T>
@@ -50,6 +50,8 @@ public:
 
 	bool add_element(T value,int key)//вставка элемента в таблицу
 	{
+		if (find_element(value) == true)//если элемент уже есть в таблице
+			return true;//возвращаем ОК
 		if ((double)size/(double)buffer_size>=REHASH_INDEX)//если заполненность таблицы составляет 1/2 от размера таблицы
 		{
 			rehash();//то расширить таблицу 
@@ -116,3 +118,9 @@ int main()
 	}
 	return 0;
 }
+	
+
+
+
+
+
