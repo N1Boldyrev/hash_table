@@ -2,7 +2,7 @@
 #include <string>
 #include <vector>
 
-#define REHASH_INDEX 0.5//коэффициент заполненияя таблицы 
+#define REHASH_INDEX 0.5//коэффициент заполнения таблицы 
 #define DEFAULT_TABLE_SIZE 4//первоначальный размер таблицы
 #define GOLDEN_RATIO 0.618033//золотое сечение
 using namespace std;
@@ -41,7 +41,7 @@ public:
 		}
 	}
 	
-	void rehash()//расширение таблицы
+	void resize()//расширение таблицы
 	{
 		buffer_size *= 2;
 		buffer.resize(buffer_size);
@@ -54,7 +54,7 @@ public:
 			return true;//возвращаем ОК
 		if ((double)size/(double)buffer_size>=REHASH_INDEX)//если заполненность таблицы составляет 1/2 от размера таблицы
 		{
-			rehash();//то расширить таблицу 
+			resize();//то расширить таблицу 
 		}
 
 		int hash;
@@ -65,7 +65,7 @@ public:
 			{
 				hash++;
 				if (hash==buffer_size)//если в конце таблицы не осталось свободных ячеек
-					return false;//возвращаем NO
+					return false;//возвращаем FAIL
 			}
 		}
 		buffer[hash] = value;//если все условия удовлетворены-заносим запись в таблицу 
@@ -81,19 +81,20 @@ public:
 				return true;//возвращаем OK
 			}
 		}
-		return false;//если элемент отсутствует в таблице-возвращаем NO
+		return false;//если элемент отсутствует в таблице-возвращаем FAIL
 	}
 };
 
 int main()
 {
+	setlocale(LC_ALL, "ru");
 	Hash_table<string>hash_map;
 	char command=' ';
 	string value;
 	int key;
 	int auto_key = DEFAULT_TABLE_SIZE;
 	bool status = false;
-	cout << "input command(+,?), than input value: \n" << endl;
+	cout << "Ведите одну из доступных комманд(+,?) \n '+'-добавить элемент \n '?'-найти элемент \n Затем введите элемент" << endl;
 	while (cin>>command>>value)
 	{
 		switch (command)
@@ -113,7 +114,7 @@ int main()
 		}
 		else
 		{
-			cout << "NO \n" << endl;
+			cout << "FAIL \n" << endl;
 		}
 	}
 	return 0;
